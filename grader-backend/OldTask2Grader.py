@@ -394,7 +394,7 @@ class Task2Grader:
 
 
         # Print the result
-        total_points = 2
+        total_points = 7
         result_text = "[" + str(result) + "/" + str(total_points) + "]"
         result_json["results"].append({"name": "Task 2", "points": result, "total": total_points})
 

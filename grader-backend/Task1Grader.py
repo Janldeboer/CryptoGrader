@@ -14,6 +14,8 @@ class Task1Grader:
     @staticmethod
     def grade_task_1(client_socket):
 
+        client_socket.settimeout(TIMEOUT_SECONDS)
+
         buffer = ""
         result = 0
         result_json = {"results": []}
@@ -100,22 +102,24 @@ class Task1Grader:
                 print(Fore.RED + "FAILED: Couldn't decode getpeers message")
                 print(Fore.RED + " -> received: " + data_string)
 
-            # we should send a hello message, otherwise the node will disconnect
-            try:
-                client_socket.sendall(b'{"type":"hello","version":"0.8.0","agent":"Fake Grader"}\n')
-                print(Fore.RESET + "INFO: Sent hello message")
-            except socket.error as e:
-                print(Fore.RED + "FAILED: Couldn't send hello message")
+        # we should send a hello message, otherwise the node will disconnect
+        try:
+           client_socket.sendall(b'{"type":"hello","version":"0.8.0","agent":"Fake Grader"}\n')
+           print(Fore.RESET + "INFO: Sent hello message")
+        except socket.error as e:
+           print(Fore.RED + "FAILED: Couldn't send hello message")
         # there might be a hello message from the node, but we don't care about it
         # so first wait, then clear message stack
         time.sleep(1)
         GraderUtility.clear_incoming_messages(client_socket)
         # we should send a getpeers message
+        # we should receive a peers message
         try:
             client_socket.sendall(b'{"type": "getpeers"}\n')
         except socket.error as e:
             print(Fore.RED + "FAILED: Couldn't send getpeers message")
-        # we should receive a peers message
+
+
         buffer = ""
         try:
             while "\n" not in buffer:
@@ -242,3 +246,4 @@ class Task1Grader:
         result_json["results"].append({"name": "Task 1", "points": result, "total": 5})
         print(Fore.RESET + "Task 1 test finished: " + result_text + "\n\n")
         return result_json
+

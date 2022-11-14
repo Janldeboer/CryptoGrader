@@ -60,7 +60,7 @@ class Grader:
 
 def run_grader():
 
-    ips_to_check = ["127.0.0.1:18018"]
+    ips_to_check = [simaos_ip]
     results = []
 
 
